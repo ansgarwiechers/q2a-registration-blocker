@@ -2,7 +2,7 @@
 
 /*
 	Plugin Name: Registration Blocker
-	Plugin URI:
+	Plugin URI: https://github.com/amiyasahu/q2a-registration-blocker
 	Plugin Description: Blocks registration if the user detected as a spammer
 	Plugin Version: 1.0
 	Plugin Date: 2015-01-25
@@ -10,7 +10,7 @@
 	Plugin Author URI: http://www.amiyasahu.com/
 	Plugin License: GPLv2
 	Plugin Minimum Question2Answer Version: 1.5
-	Plugin Update Check URI:
+	Plugin Update Check URI: https://raw.githubusercontent.com/amiyasahu/q2a-registration-blocker/master/qa-plugin.php
 */
 
 
