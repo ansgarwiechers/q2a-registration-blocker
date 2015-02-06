@@ -2,7 +2,7 @@
 
     function qa_create_new_user($email, $password, $handle, $level=QA_USER_LEVEL_BASIC, $confirmed=false){
 
-        if(qa_opt(qas_ubl_opt::BAN_SPAM_IPS)){
+        if( qa_opt(qas_ubl_opt::PLUGIN_ACTIVE) && qa_opt(qas_ubl_opt::BAN_SPAM_IPS)){
 
             require_once QAS_U_BLOCKER_PLUGIN_DIR . '/stopspamforum.php' ;
             $ip = qa_remote_ip_address();
