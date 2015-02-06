@@ -1,9 +1,15 @@
 <?php
+    
     /**
      * StopForumSpam
      *
      * Wrapper class for stopforumspam.com API. Uses json internally.
      *
+     * @author Armin Rosu
+     * @copyright 2011, Armin Rosu
+     * @license http://www.opensource.org/licenses/BSD-3-Clause BSD 3-Clause License
+     * @link http://www.stopforumspam.com/usage API Reference
+     * @version 0.1
      */
 
     class StopForumSpam
