@@ -1,5 +1,4 @@
 # Q2A Registration Blocker
-----------
 
 Blocks registration if the user detected as a spammer
 
