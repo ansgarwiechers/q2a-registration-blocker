@@ -14,5 +14,5 @@
             }
         }
 
-        qa_create_new_user_base($email, $password, $handle, $level, $confirmed);
+        return qa_create_new_user_base($email, $password, $handle, $level, $confirmed);
     }
