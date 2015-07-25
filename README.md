@@ -6,8 +6,6 @@ Features
 ----------
 * Block some user names to be registerd on the site like xxx , owner , spammer , virus 
 * Block some undesired email domains like xx.xom , xyz.com , me.com etc 
-* While registering plugin checks the ip address with http://www.stopforumspam.com/ and throws an error if it is detected as spam and does not let the user to register
-* Page to display the blocked users (supports custom HTML , images etc.)
 * Prevent user from changing his email address 
 * prevent user from changing his username 
 

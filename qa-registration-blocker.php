@@ -32,7 +32,6 @@
         {
             switch ( $option ) {
                 case qas_ubl_opt::PLUGIN_ACTIVE :
-                case qas_ubl_opt::BAN_SPAM_IPS :
                     return 1;
                 default :
                     return null;
@@ -47,16 +46,12 @@
                 qa_opt( qas_ubl_opt::PLUGIN_ACTIVE, (int) qa_post_text( qas_ubl_opt::PLUGIN_ACTIVE ) );
                 qa_opt( qas_ubl_opt::BANNED_USERNAMES, qa_post_text( qas_ubl_opt::BANNED_USERNAMES ) );
                 qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS, qa_post_text( qas_ubl_opt::BANNED_EMAIL_DOMAINS ) );
-                qa_opt( qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE, qa_post_text( qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE ) );
-                qa_opt( qas_ubl_opt::BAN_SPAM_IPS, (int) qa_post_text( qas_ubl_opt::BAN_SPAM_IPS ) );
                 qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL ) );
                 qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE ) );
                 $saved = true;
             }
 
             qa_set_display_rules( $qa_content, array(
-                qas_ubl_opt::BAN_SPAM_IPS                => qas_ubl_opt::PLUGIN_ACTIVE,
-                qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE  => qas_ubl_opt::BAN_SPAM_IPS . '_OPT',
                 qas_ubl_opt::BANNED_USERNAMES            => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::BANNED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
@@ -68,10 +63,9 @@
                 $this->get_activate_form_elem(),
                 $this->get_banned_username_field(),
                 $this->get_banned_email_domain_field(),
-                $this->get_ban_anonymous_ip_field(),
-                $this->get_custom_message_on_blocked_page(),
-                $this->get_dont_allow_email_field(),
-                $this->get_dont_allow_handle_field() );
+                $this->get_dont_allow_email_field_change(),
+                $this->get_dont_allow_handle_field_change()
+            );
 
             return array(
                 'ok'      => ( $saved && !isset( $error ) ) ? $this->translate( 'settings_saved' ) : null,
@@ -151,20 +145,7 @@
             ) );
         }
 
-        private function get_ban_anonymous_ip_field()
-        {
-            return array( array(
-                'id'    => qas_ubl_opt::BAN_SPAM_IPS,
-                'label' => $this->translate( 'ban_anonymous_ips' ),
-                'note'  => $this->translate( 'ban_anonymous_ips_note' ),
-                'tags'  => 'name="' . qas_ubl_opt::BAN_SPAM_IPS . '" id="' . qas_ubl_opt::BAN_SPAM_IPS . '_OPT' . '" ',
-                'value' => qa_opt( qas_ubl_opt::BAN_SPAM_IPS ),
-                'type'  => 'checkbox',
-            ) );
-        }
-
-
-        private function get_dont_allow_email_field()
+        private function get_dont_allow_email_field_change()
         {
             return array( array(
                 'id'    => qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL,
@@ -176,7 +157,7 @@
         }
 
 
-        private function get_dont_allow_handle_field()
+        private function get_dont_allow_handle_field_change()
         {
             return array( array(
                 'id'    => qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE,
@@ -213,18 +194,6 @@
             ) );
         }
 
-        private function get_custom_message_on_blocked_page()
-        {
-            return array( array(
-                'id'    => qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE,
-                'label' => $this->translate( 'custom_message_on_blocked_page' ),
-                'note'  => $this->translate( 'custom_message_on_blocked_page_note' ),
-                'tags'  => 'name="' . qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE . '"',
-                'value' => qa_opt( qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE ),
-                'type'  => 'textarea',
-                'rows'  => 10,
-            ) );
-        }
     }
 
 

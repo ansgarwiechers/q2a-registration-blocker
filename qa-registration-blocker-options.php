@@ -31,8 +31,6 @@
         const SAVE_OPTIONS = 'qas_ubl_save_options';
         const BANNED_USERNAMES = 'qas_ubl_banned_usernames';
         const BANNED_EMAIL_DOMAINS = 'qas_ubl_banned_email_domains';
-        const BAN_SPAM_IPS = 'qas_ubl_ban_anonymous_ips';
         const DONT_ALLOW_TO_CHANGE_EMAIL = 'qas_ubl_dont_allow_ch_email';
         const DONT_ALLOW_TO_CHANGE_HANDLE = 'qas_ubl_dont_allow_ch_handle';
-        const CUSTOM_MSG_ON_BLOCKED_PAGE = 'qas_ubl_custom_msg_blocked_page';
     }

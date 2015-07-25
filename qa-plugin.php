@@ -4,7 +4,7 @@
         Plugin Name: Registration Blocker
         Plugin URI: https://github.com/amiyasahu/q2a-registration-blocker
         Plugin Description: Blocks registration if the user detected as a spammer
-        Plugin Version: 1.2
+        Plugin Version: 1.3
         Plugin Date: 2015-07-25
         Plugin Author: Amiya Sahu
         Plugin Author URI: http://www.amiyasahu.com/
@@ -24,9 +24,7 @@
 
     require_once QAS_U_BLOCKER_PLUGIN_DIR . '/qa-registration-blocker-options.php';
 
-    qa_register_plugin_overrides( 'qa-registration-blocker-overrides.php' );
     qa_register_plugin_module( 'filter', 'qa-registration-blocker.php', 'qas_registration_blocker', 'QA Registration Blocker' );
-    qa_register_plugin_module( 'page', 'qa-registration-blocked-page.php', 'qa_registration_blocked', 'QA Registration blocked Page' );
     qa_register_plugin_phrases( 'qa-registration-blocker-lang-*.php', 'qas_regb' );
 
 
