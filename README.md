@@ -1,6 +1,6 @@
 # Q2A Registration Blocker
 
-Blocks registration if the user detected as a spammer
+Blocks registration for provided usernames and email domains
 
 Features
 ----------
