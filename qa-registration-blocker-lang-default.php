@@ -1,11 +1,11 @@
 <?php
 
-    if (!defined('QA_VERSION')) { // don't allow this page to be requested directly from browser
-        header('Location: ../../');
+    if ( !defined( 'QA_VERSION' ) ) { // don't allow this page to be requested directly from browser
+        header( 'Location: ../../' );
         exit;
     }
 
-	return array(
+    return array(
         'settings_saved'                 => "Plugin Settings Saved",
         'activate_plugin'                => "Activate this plugin",
         'banned_usernames'               => "Banned Usernames",
@@ -21,9 +21,9 @@
         'not_allowed_to_change_email'    => 'You are not allowed to change your email',
         'not_allowed_to_change_username' => 'You are not allowed to change your username',
         'you_are_detected_as_spammer'    => 'You are detected as a spammer and Not allowed to register here',
-	);
+    );
 
 
-/*
-	Omit PHP closing tag to help avoid accidental output
-*/
+    /*
+        Omit PHP closing tag to help avoid accidental output
+    */

@@ -1,5 +1,5 @@
 <?php
-    
+
     /**
      * StopForumSpam
      *
@@ -11,7 +11,6 @@
      * @link http://www.stopforumspam.com/usage API Reference
      * @version 0.1
      */
-
     class StopForumSpam
     {
         /**
@@ -34,7 +33,8 @@
          *
          * @param string $api_key Your API Key, optional (unless adding to database).
          */
-        public function __construct( $api_key = null ) {
+        public function __construct( $api_key = null )
+        {
             // store variables
             $this->api_key = $api_key;
         }
@@ -49,13 +49,13 @@
         public function add( $args )
         {
             // check for mandatory arguments
-            if (empty($args['username']) || empty($args['ip_addr']) || empty($args['email']) ) {
+            if ( empty( $args['username'] ) || empty( $args['ip_addr'] ) || empty( $args['email'] ) ) {
                 return false;
             }
 
             // known?
-            $is_spammer = $this->is_spammer($args);
-            if (!$is_spammer || $is_spammer['known']) {
+            $is_spammer = $this->is_spammer( $args );
+            if ( !$is_spammer || $is_spammer['known'] ) {
                 return false;
             }
 
@@ -63,12 +63,12 @@
             $args['api_key'] = $this->api_key;
 
             // url to poll
-            $url = $this->endpoint.'add.php?'.http_build_query($args, '', '&');
+            $url = $this->endpoint . 'add.php?' . http_build_query( $args, '', '&' );
 
             // execute
-            $response = file_get_contents($url);
+            $response = file_get_contents( $url );
 
-            return (false == $response ? false : true);
+            return ( false == $response ? false : true );
         }
 
         /**
@@ -83,7 +83,7 @@
             // should check first if not already in database
 
             // url to poll
-            $url = $this->endpoint.'api?f=json&'.http_build_query($args, '', '&');
+            $url = $this->endpoint . 'api?f=json&' . http_build_query( $args, '', '&' );
 
             //
             return $this->poll_json( $url );
@@ -101,7 +101,7 @@
             // poll database
             $record = $this->get( $args );
 
-            if ( !isset($record->success) ) {
+            if ( !isset( $record->success ) ) {
                 return false;
             }
 
@@ -114,15 +114,13 @@
             // parse database record
             $datapoint_count = 0;
             $known_datapoints = 0;
-            foreach( $record as $datapoint )
-            {
+            foreach ( $record as $datapoint ) {
                 // not 'success'
-                if ( isset($datapoint->appears) ) {
+                if ( isset( $datapoint->appears ) ) {
                     $datapoint_count++;
 
                     // are ANY of the datapoints on SFS?
-                    if ( $datapoint->appears == true)
-                    {
+                    if ( $datapoint->appears == true ) {
                         $known_datapoints++;
                         $spammer = true;
                     }
@@ -130,13 +128,13 @@
             }
 
             // are ANY of the datapoints not on SFS
-            if ( $datapoint_count > $known_datapoints) {
+            if ( $datapoint_count > $known_datapoints ) {
                 $known = false;
             }
 
             return array(
                 'spammer' => $spammer,
-                'known' => $known
+                'known'   => $known,
             );
         }
 
@@ -150,7 +148,7 @@
         protected static function poll_json( $url )
         {
             $json = file_get_contents( $url );
-            $object = json_decode($json);
+            $object = json_decode( $json );
 
             return $object;
         }
