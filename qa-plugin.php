@@ -26,6 +26,7 @@
 
     qa_register_plugin_overrides( 'qa-registration-blocker-overrides.php' );
     qa_register_plugin_module( 'filter', 'qa-registration-blocker.php', 'qas_registration_blocker', 'QA Registration Blocker' );
+    qa_register_plugin_module( 'page', 'qa-registration-blocked-page.php', 'qa_registration_blocked', 'QA Registration blocked Page' );
     qa_register_plugin_phrases( 'qa-registration-blocker-lang-*.php', 'qas_regb' );
 
 

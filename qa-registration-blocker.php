@@ -1,4 +1,24 @@
 <?php
+    /*
+        Question2Answer by Gideon Greenspan and contributors
+        http://www.question2answer.org/
+
+        File: qa-plugin/example-page/qa-example-page.php
+        Description: Page module class for example page plugin
+
+
+        This program is free software; you can redistribute it and/or
+        modify it under the terms of the GNU General Public License
+        as published by the Free Software Foundation; either version 2
+        of the License, or (at your option) any later version.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        More about this license: http://www.question2answer.org/license.php
+    */
 
     if ( !defined( 'QA_VERSION' ) ) { // don't allow this page to be requested directly from browser
         header( 'Location: ../../' );
@@ -27,6 +47,7 @@
                 qa_opt( qas_ubl_opt::PLUGIN_ACTIVE, (int) qa_post_text( qas_ubl_opt::PLUGIN_ACTIVE ) );
                 qa_opt( qas_ubl_opt::BANNED_USERNAMES, qa_post_text( qas_ubl_opt::BANNED_USERNAMES ) );
                 qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS, qa_post_text( qas_ubl_opt::BANNED_EMAIL_DOMAINS ) );
+                qa_opt( qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE, qa_post_text( qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE ) );
                 qa_opt( qas_ubl_opt::BAN_SPAM_IPS, (int) qa_post_text( qas_ubl_opt::BAN_SPAM_IPS ) );
                 qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL ) );
                 qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE ) );
@@ -35,6 +56,7 @@
 
             qa_set_display_rules( $qa_content, array(
                 qas_ubl_opt::BAN_SPAM_IPS                => qas_ubl_opt::PLUGIN_ACTIVE,
+                qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE  => qas_ubl_opt::BAN_SPAM_IPS . '_OPT',
                 qas_ubl_opt::BANNED_USERNAMES            => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::BANNED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
@@ -42,10 +64,12 @@
             ) );
 
 
-            $fields = array_merge( $this->get_activate_form_elem(),
+            $fields = array_merge(
+                $this->get_activate_form_elem(),
                 $this->get_banned_username_field(),
                 $this->get_banned_email_domain_field(),
                 $this->get_ban_anonymous_ip_field(),
+                $this->get_custom_message_on_blocked_page(),
                 $this->get_dont_allow_email_field(),
                 $this->get_dont_allow_handle_field() );
 
@@ -133,7 +157,7 @@
                 'id'    => qas_ubl_opt::BAN_SPAM_IPS,
                 'label' => $this->translate( 'ban_anonymous_ips' ),
                 'note'  => $this->translate( 'ban_anonymous_ips_note' ),
-                'tags'  => 'name="' . qas_ubl_opt::BAN_SPAM_IPS . '"',
+                'tags'  => 'name="' . qas_ubl_opt::BAN_SPAM_IPS . '" id="' . qas_ubl_opt::BAN_SPAM_IPS . '_OPT' . '" ',
                 'value' => qa_opt( qas_ubl_opt::BAN_SPAM_IPS ),
                 'type'  => 'checkbox',
             ) );
@@ -184,6 +208,19 @@
                 'note'  => $this->translate( 'banned_email_domains_note' ),
                 'tags'  => 'name="' . qas_ubl_opt::BANNED_EMAIL_DOMAINS . '"',
                 'value' => qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS ),
+                'type'  => 'textarea',
+                'rows'  => 10,
+            ) );
+        }
+
+        private function get_custom_message_on_blocked_page()
+        {
+            return array( array(
+                'id'    => qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE,
+                'label' => $this->translate( 'custom_message_on_blocked_page' ),
+                'note'  => $this->translate( 'custom_message_on_blocked_page_note' ),
+                'tags'  => 'name="' . qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE . '"',
+                'value' => qa_opt( qas_ubl_opt::CUSTOM_MSG_ON_BLOCKED_PAGE ),
                 'type'  => 'textarea',
                 'rows'  => 10,
             ) );

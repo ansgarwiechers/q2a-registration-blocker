@@ -1,5 +1,26 @@
 <?php
 
+    /*
+    Question2Answer by Gideon Greenspan and contributors
+    http://www.question2answer.org/
+
+    File: qa-plugin/example-page/qa-example-page.php
+    Description: Page module class for example page plugin
+
+
+    This program is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License
+    as published by the Free Software Foundation; either version 2
+    of the License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    More about this license: http://www.question2answer.org/license.php
+    */
+
     function qa_create_new_user( $email, $password, $handle, $level = QA_USER_LEVEL_BASIC, $confirmed = false )
     {
 
@@ -11,7 +32,7 @@
             $args = array( 'email' => $email, 'ip' => $ip, 'username' => $handle );
             $is_spammer = $sfs->is_spammer( $args );
             if ( $is_spammer ) {
-                qa_fatal_error( qa_lang_html( 'qas_regb/you_are_detected_as_spammer' ) );
+                qa_redirect('registration-blocked' , array('state'=>'show-error'));
             }
         }
 
