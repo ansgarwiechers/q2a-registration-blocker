@@ -32,7 +32,7 @@
             $args = array( 'email' => $email, 'ip' => $ip, 'username' => $handle );
             $is_spammer = $sfs->is_spammer( $args );
             if ( $is_spammer ) {
-                qa_redirect('registration-blocked' , array('state'=>'show-error'));
+                qa_redirect( 'registration-blocked', array( 'state' => 'show-error' ) );
             }
         }
 
