@@ -4,8 +4,8 @@
         Plugin Name: Registration Blocker
         Plugin URI: https://github.com/amiyasahu/q2a-registration-blocker
         Plugin Description: Blocks registration if the user detected as a spammer
-        Plugin Version: 1.1.0
-        Plugin Date: 2015-02-06
+        Plugin Version: 1.2
+        Plugin Date: 2015-07-25
         Plugin Author: Amiya Sahu
         Plugin Author URI: http://www.amiyasahu.com/
         Plugin License: GPLv2
