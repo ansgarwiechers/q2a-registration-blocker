@@ -31,7 +31,7 @@
         'banned_usernames'                    => "Banned Usernames",
         'banned_usernames_note'               => "Only usernames separated by comma (eg owner,stupid)",
         'banned_email_domains'                => "Banned Email Domains",
-        'banned_email_domains_note'           => "Only domain names separated by comma (eg xyz.com,some.com)",
+        'banned_email_domains_note'           => "Only domain names separated by comma (eg example.org,example.com). To ban subdomains of a domain add a the domain name with a leading dot (eg .example.org)",
         'dont_allow_ch_email'                 => "Don't allow to change users email",
         'dont_allow_ch_handle'                => "Don't allow to change users handle",
         'email_domain_not_allowed'            => "This domain is not allowed",

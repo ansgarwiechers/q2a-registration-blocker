@@ -81,9 +81,21 @@
         {
             $banned_ids = explode( ',', qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS ) );
             $banned_ids = array_map( 'trim', $banned_ids );
+            $banned_domains = Array();
+            $banned_subdomains = Array();
+            foreach ($banned_ids as $id) {
+                if ( substr($id, 0, 1) === '.' ) {
+                    $banned_subdomains[] = $id;
+                } else {
+                    $banned_domains[] = $id;
+                }
+            }
             $email_domain = $this->get_domain_from_email( $email );
 
-            if ( in_array( $email_domain, $banned_ids ) )
+            if ( in_array( $email_domain, $banned_domains ) )
+                return $this->translate( 'email_domain_not_allowed' );
+
+            if ( $this->ends_with_any( $email_domain, $banned_subdomains ) )
                 return $this->translate( 'email_domain_not_allowed' );
 
             if ( qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL ) && isset( $olduser ) && qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT ) {
@@ -192,6 +204,17 @@
                 'type'  => 'textarea',
                 'rows'  => 10,
             ) );
+        }
+
+        private function ends_with_any($str, $matches)
+        {
+            foreach ($matches as $match) {
+                $length = strlen($match);
+                if ($length == 0 or substr($str, -$length) === $match) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }
