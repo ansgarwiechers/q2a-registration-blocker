@@ -1,19 +1,5 @@
 <?php
 
-    /*
-        Plugin Name: Q2A Registration Blocker
-        Plugin URI: https://github.com/amiyasahu/q2a-registration-blocker
-        Plugin Description: Blocks registration for provided usernames and email domains
-        Plugin Version: 1.3
-        Plugin Date: 2015-07-25
-        Plugin Author: Amiya Sahu
-        Plugin Author URI: http://www.amiyasahu.com/
-        Plugin License: GPLv2
-        Plugin Minimum Question2Answer Version: 1.5
-        Plugin Update Check URI: https://raw.githubusercontent.com/amiyasahu/q2a-registration-blocker/master/qa-plugin.php
-    */
-
-
     if ( !defined( 'QA_VERSION' ) ) { // don't allow this page to be requested directly from browser
         header( 'Location: ../../' );
         exit;

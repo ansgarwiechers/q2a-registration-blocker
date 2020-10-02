@@ -1,0 +1,12 @@
+{
+	"name": "Registration Blocker",
+	"description": "Blocks registration for provided usernames and email domains.",
+	"version": "1.4.0",
+	"date": "2020-10-01",
+	"author": "Amiya Sahu",
+	"author": "Ansgar Wiechers",
+	"author_uri": "https://ask.planetcobalt.net/",
+	"license": "GPLv3",
+	"min_q2a": "1.5",
+	"load_order": "after_db_init"
+}
