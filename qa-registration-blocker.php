@@ -46,6 +46,7 @@
                 qa_opt( qas_ubl_opt::PLUGIN_ACTIVE, (int) qa_post_text( qas_ubl_opt::PLUGIN_ACTIVE ) );
                 qa_opt( qas_ubl_opt::BANNED_USERNAMES, qa_post_text( qas_ubl_opt::BANNED_USERNAMES ) );
                 qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS, qa_post_text( qas_ubl_opt::BANNED_EMAIL_DOMAINS ) );
+                qa_opt( qas_ubl_opt::BANNED_EMAIL_ADDRESSES, qa_post_text( qas_ubl_opt::BANNED_EMAIL_ADDRESSES ) );
                 qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL ) );
                 qa_opt( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text( qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE ) );
                 $saved = true;
@@ -54,6 +55,7 @@
             qa_set_display_rules( $qa_content, array(
                 qas_ubl_opt::BANNED_USERNAMES            => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::BANNED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
+                qas_ubl_opt::BANNED_EMAIL_ADDRESSES      => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
                 qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE => qas_ubl_opt::PLUGIN_ACTIVE,
             ) );
@@ -63,6 +65,7 @@
                 $this->get_activate_form_elem(),
                 $this->get_banned_username_field(),
                 $this->get_banned_email_domain_field(),
+                $this->get_banned_email_address_field(),
                 $this->get_dont_allow_email_field_change(),
                 $this->get_dont_allow_handle_field_change()
             );
@@ -79,6 +82,7 @@
 
         public function filter_email( &$email, $olduser )
         {
+            $banned_emails = explode( ',', qa_opt( qas_ubl_opt::BANNED_EMAIL_ADDRESSES ) );
             $banned_ids = explode( ',', qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS ) );
             $banned_ids = array_map( 'trim', $banned_ids );
             $banned_domains = Array();
@@ -90,6 +94,10 @@
                     $banned_domains[] = $id;
                 }
             }
+
+            if ( in_array( $email, $banned_emails ) )
+                return $this->translate( 'email_address_not_allowed' );
+
             $email_domain = $this->get_domain_from_email( $email );
 
             if ( in_array( $email_domain, $banned_domains ) )
@@ -201,6 +209,19 @@
                 'note'  => $this->translate( 'banned_email_domains_note' ),
                 'tags'  => 'name="' . qas_ubl_opt::BANNED_EMAIL_DOMAINS . '"',
                 'value' => qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS ),
+                'type'  => 'textarea',
+                'rows'  => 10,
+            ) );
+        }
+
+        private function get_banned_email_address_field()
+        {
+            return array( array(
+                'id'    => qas_ubl_opt::BANNED_EMAIL_ADDRESSES,
+                'label' => $this->translate( 'banned_email_addresses' ),
+                'note'  => $this->translate( 'banned_email_addresses_note' ),
+                'tags'  => 'name="' . qas_ubl_opt::BANNED_EMAIL_ADDRESSES . '"',
+                'value' => qa_opt( qas_ubl_opt::BANNED_EMAIL_ADDRESSES ),
                 'type'  => 'textarea',
                 'rows'  => 10,
             ) );
