@@ -15,7 +15,7 @@
 
 // don't allow this page to be requested directly from browser
 if (!defined('QA_VERSION')) {
-  header( 'Location: ../../' );
+  header('Location: ../../');
   exit;
 }
 
@@ -106,10 +106,10 @@ class qas_registration_blocker {
     $banned_usernames = array_map('trim', $banned_usernames);
 
     if (in_array($handle, $banned_usernames)) {
-      return $this->translate( 'username_not_allowed' );
+      return $this->translate('username_not_allowed');
     }
 
-    if (qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE) && isset($olduser ) && qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT) {
+    if (qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE) && isset($olduser) && qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT) {
       return $this->translate('not_allowed_to_change_username');
     }
   }
