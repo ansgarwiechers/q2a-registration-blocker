@@ -83,6 +83,7 @@
         public function filter_email( &$email, $olduser )
         {
             $banned_emails = explode( ',', qa_opt( qas_ubl_opt::BANNED_EMAIL_ADDRESSES ) );
+            $banned_emails = array_map( 'trim', $banned_emails );
             $banned_ids = explode( ',', qa_opt( qas_ubl_opt::BANNED_EMAIL_DOMAINS ) );
             $banned_ids = array_map( 'trim', $banned_ids );
             $banned_domains = Array();
