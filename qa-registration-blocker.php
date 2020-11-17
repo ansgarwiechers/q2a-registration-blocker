@@ -36,7 +36,7 @@ class qas_registration_blocker {
     if (qa_clicked(qas_ubl_opt::SAVE_OPTIONS)) {
       qa_opt(qas_ubl_opt::PLUGIN_ACTIVE, (int) qa_post_text(qas_ubl_opt::PLUGIN_ACTIVE));
       qa_opt(qas_ubl_opt::BANNED_USERNAMES, qa_post_text(qas_ubl_opt::BANNED_USERNAMES));
-      qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS, qa_post_text(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
+      qa_opt(qas_ubl_opt::ALLOWED_EMAIL_DOMAINS, qa_post_text(qas_ubl_opt::ALLOWED_EMAIL_DOMAINS));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES, qa_post_text(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE));
@@ -45,7 +45,7 @@ class qas_registration_blocker {
 
     qa_set_display_rules($qa_content, array(
       qas_ubl_opt::BANNED_USERNAMES            => qas_ubl_opt::PLUGIN_ACTIVE,
-      qas_ubl_opt::BANNED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
+      qas_ubl_opt::ALLOWED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_ADDRESSES      => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE => qas_ubl_opt::PLUGIN_ACTIVE,
@@ -54,7 +54,7 @@ class qas_registration_blocker {
     $fields = array_merge(
       $this->get_activate_form_elem(),
       $this->get_banned_username_field(),
-      $this->get_banned_email_domain_field(),
+      $this->get_allowed_email_domain_field(),
       $this->get_banned_email_address_field(),
       $this->get_dont_allow_email_field_change(),
       $this->get_dont_allow_handle_field_change()
@@ -70,17 +70,8 @@ class qas_registration_blocker {
   public function filter_email(&$email, $olduser) {
     $banned_emails     = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
     $banned_emails     = array_map('trim', $banned_emails);
-    $banned_ids        = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
-    $banned_ids        = array_map('trim', $banned_ids);
-    $banned_domains    = Array();
-    $banned_subdomains = Array();
-    foreach ($banned_ids as $id) {
-      if (substr($id, 0, 1) === '.') {
-        $banned_subdomains[] = $id;
-      } else {
-        $banned_domains[] = $id;
-      }
-    }
+    $banned_domains        = explode(',', qa_opt(qas_ubl_opt::ALLOWED_EMAIL_DOMAINS));
+    $banned_domains        = array_map('trim', $banned_domains);
 
     if (in_array($email, $banned_emails)) {
       return $this->translate('email_address_not_allowed');
@@ -88,11 +79,7 @@ class qas_registration_blocker {
 
     $email_domain = $this->get_domain_from_email($email);
 
-    if (in_array($email_domain, $banned_domains)) {
-      return $this->translate('email_domain_not_allowed');
-    }
-
-    if ($this->ends_with_any($email_domain, $banned_subdomains)) {
+    if (!in_array($email_domain, $banned_domains)) {
       return $this->translate('email_domain_not_allowed');
     }
 
@@ -179,13 +166,13 @@ class qas_registration_blocker {
     ));
   }
 
-  private function get_banned_email_domain_field() {
+  private function get_allowed_email_domain_field() {
     return array(array(
-      'id'    => qas_ubl_opt::BANNED_EMAIL_DOMAINS,
-      'label' => $this->translate('banned_email_domains'),
-      'note'  => $this->translate('banned_email_domains_note'),
-      'tags'  => 'name="' . qas_ubl_opt::BANNED_EMAIL_DOMAINS . '"',
-      'value' => qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS),
+      'id'    => qas_ubl_opt::ALLOWED_EMAIL_DOMAINS,
+      'label' => $this->translate('allowed_email_domains'),
+      'note'  => $this->translate('allowed_email_domains_note'),
+      'tags'  => 'name="' . qas_ubl_opt::ALLOWED_EMAIL_DOMAINS . '"',
+      'value' => qa_opt(qas_ubl_opt::ALLOWED_EMAIL_DOMAINS),
       'type'  => 'textarea',
       'rows'  => 10,
     ));
@@ -202,15 +189,4 @@ class qas_registration_blocker {
       'rows'  => 10,
     ));
   }
-
-  private function ends_with_any($str, $matches) {
-    foreach ($matches as $match) {
-      $length = strlen($match);
-      if ($length == 0 or substr($str, -$length) === $match) {
-        return true;
-      }
-    }
-    return false;
-  }
-
 }
