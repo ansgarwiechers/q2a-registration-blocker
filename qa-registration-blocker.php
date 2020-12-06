@@ -37,6 +37,7 @@ class qas_registration_blocker {
       qa_opt(qas_ubl_opt::PLUGIN_ACTIVE, (int) qa_post_text(qas_ubl_opt::PLUGIN_ACTIVE));
       qa_opt(qas_ubl_opt::BANNED_USERNAMES, qa_post_text(qas_ubl_opt::BANNED_USERNAMES));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS, qa_post_text(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
+      qa_opt(qas_ubl_opt::WHITELIST_MODE, (int) qa_post_text(qas_ubl_opt::WHITELIST_MODE));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES, qa_post_text(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE));
@@ -46,6 +47,7 @@ class qas_registration_blocker {
     qa_set_display_rules($qa_content, array(
       qas_ubl_opt::BANNED_USERNAMES            => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
+      qas_ubl_opt::WHITELIST_MODE              => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_ADDRESSES      => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE => qas_ubl_opt::PLUGIN_ACTIVE,
@@ -55,6 +57,7 @@ class qas_registration_blocker {
       $this->get_activate_form_elem(),
       $this->get_banned_username_field(),
       $this->get_banned_email_domain_field(),
+      $this->get_whitelist_mode(),
       $this->get_banned_email_address_field(),
       $this->get_dont_allow_email_field_change(),
       $this->get_dont_allow_handle_field_change()
@@ -68,17 +71,21 @@ class qas_registration_blocker {
   }
 
   public function filter_email(&$email, $olduser) {
-    $banned_emails     = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
-    $banned_emails     = array_map('trim', $banned_emails);
-    $banned_ids        = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
-    $banned_ids        = array_map('trim', $banned_ids);
-    $banned_domains    = Array();
-    $banned_subdomains = Array();
-    foreach ($banned_ids as $id) {
-      if (substr($id, 0, 1) === '.') {
-        $banned_subdomains[] = $id;
+    $whitelist_mode = qa_opt(qas_ubl_opt::WHITELIST_MODE);
+
+    $banned_emails  = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
+    $banned_emails  = array_map('trim', $banned_emails);
+
+    $all_domains    = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
+    $all_domains    = array_map('trim', $all_domains);
+    $topdomains     = Array();
+    $subdomains     = Array();
+
+    foreach ($all_domains as $domain) {
+      if (substr($domain, 0, 1) === '.') {
+        $subdomains[] = $domain;
       } else {
-        $banned_domains[] = $id;
+        $topdomains[] = $domain;
       }
     }
 
@@ -88,12 +95,17 @@ class qas_registration_blocker {
 
     $email_domain = $this->get_domain_from_email($email);
 
-    if (in_array($email_domain, $banned_domains)) {
-      return $this->translate('email_domain_not_allowed');
-    }
-
-    if ($this->ends_with_any($email_domain, $banned_subdomains)) {
-      return $this->translate('email_domain_not_allowed');
+    if ($whitelist_mode) {
+      if (!(in_array($email_domain, $topdomains) or $this->ends_with_any($email_domain, $subdomains))) {
+        return $this->translate('email_domain_not_allowed');
+      }
+    } else {
+      if (in_array($email_domain, $topdomains)) {
+        return $this->translate('email_domain_not_allowed');
+      }
+      if ($this->ends_with_any($email_domain, $subdomains)) {
+        return $this->translate('email_domain_not_allowed');
+      }
     }
 
     if (qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL) && isset($olduser) && qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT) {
@@ -143,6 +155,17 @@ class qas_registration_blocker {
       'label' => $this->translate('activate_plugin'),
       'tags'  => 'name="' . qas_ubl_opt::PLUGIN_ACTIVE . '" id="' . qas_ubl_opt::PLUGIN_ACTIVE . '"',
       'value' => qa_opt(qas_ubl_opt::PLUGIN_ACTIVE),
+      'type'  => 'checkbox',
+    ));
+  }
+
+  private function get_whitelist_mode() {
+    return array(array(
+      'id'    => qas_ubl_opt::WHITELIST_MODE,
+      'label' => $this->translate('whitelist_mode'),
+      'note'  => $this->translate('whitelist_mode_note'),
+      'tags'  => 'name="' . qas_ubl_opt::WHITELIST_MODE . '"',
+      'value' => qa_opt(qas_ubl_opt::WHITELIST_MODE),
       'type'  => 'checkbox',
     ));
   }
