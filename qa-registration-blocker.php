@@ -39,6 +39,7 @@ class qas_registration_blocker {
       qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS, qa_post_text(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
       qa_opt(qas_ubl_opt::WHITELIST_MODE, (int) qa_post_text(qas_ubl_opt::WHITELIST_MODE));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES, qa_post_text(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
+      qa_opt(qas_ubl_opt::BANNED_EMAIL_REGEX, qa_post_text(qas_ubl_opt::BANNED_EMAIL_REGEX));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE));
       $saved = true;
@@ -49,6 +50,7 @@ class qas_registration_blocker {
       qas_ubl_opt::BANNED_EMAIL_DOMAINS        => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::WHITELIST_MODE              => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_ADDRESSES      => qas_ubl_opt::PLUGIN_ACTIVE,
+      qas_ubl_opt::BANNED_EMAIL_REGEX          => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE => qas_ubl_opt::PLUGIN_ACTIVE,
     ));
@@ -59,6 +61,7 @@ class qas_registration_blocker {
       $this->get_banned_email_domain_field(),
       $this->get_whitelist_mode(),
       $this->get_banned_email_address_field(),
+      $this->get_banned_email_regex_field(),
       $this->get_dont_allow_email_field_change(),
       $this->get_dont_allow_handle_field_change()
     );
@@ -75,6 +78,9 @@ class qas_registration_blocker {
 
     $banned_emails  = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
     $banned_emails  = array_map('trim', $banned_emails);
+
+    $banned_regex   = explode("\n", qa_opt(qas_ubl_opt::BANNED_EMAIL_REGEX));
+    $banned_regex   = array_unique(array_filter($banned_regex, 'strlen'));  // remove empty lines, but don't trim expressions; also remove duplicates
 
     $all_domains    = explode(',', qa_opt(qas_ubl_opt::BANNED_EMAIL_DOMAINS));
     $all_domains    = array_map('trim', $all_domains);
@@ -106,6 +112,10 @@ class qas_registration_blocker {
       if ($this->ends_with_any($email_domain, $subdomains)) {
         return $this->translate('email_domain_not_allowed');
       }
+    }
+
+    if ($this->matches_regex($banned_regex, $email)) {
+      return $this->translate('email_address_not_allowed');
     }
 
     if (qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL) && isset($olduser) && qa_get_logged_in_level() < QA_USER_LEVEL_EXPERT) {
@@ -226,6 +236,18 @@ class qas_registration_blocker {
     ));
   }
 
+  private function get_banned_email_regex_field() {
+    return array(array(
+      'id'    => qas_ubl_opt::BANNED_EMAIL_REGEX,
+      'label' => $this->translate('banned_email_regex'),
+      'note'  => $this->translate('banned_email_regex_note'),
+      'tags'  => 'name="' . qas_ubl_opt::BANNED_EMAIL_REGEX . '"',
+      'value' => qa_opt(qas_ubl_opt::BANNED_EMAIL_REGEX),
+      'type'  => 'textarea',
+      'rows'  => 10,
+    ));
+  }
+
   private function ends_with_any($str, $matches) {
     foreach ($matches as $match) {
       $length = strlen($match);
@@ -234,6 +256,15 @@ class qas_registration_blocker {
       }
     }
     return false;
+  }
+
+  private function matches_regex($re_list, $str) {
+    $callback = function($a, $b) {
+      return preg_match("/${a}/i", $b);
+    };
+    $str_list = array_fill(0, count($re_list), $str);
+    $matches  = array_map($callback, $re_list, $str_list);
+    return !empty(array_filter($matches));
   }
 
 }

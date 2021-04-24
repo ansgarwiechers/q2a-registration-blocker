@@ -30,6 +30,8 @@ return array(
   'whitelist_mode_note'            => 'Allow only listed domains/subdomains and ban everything else (default behavior is to ban all listed domains/subdomains)',
   'banned_email_addresses'         => "Banned Email Addresses",
   'banned_email_addresses_note'    => "Only email addresses separated by comma (eg some@example.org,other@example.com)",
+  'banned_email_regex'             => "Banned Email Address Patterns",
+  'banned_email_regex_note'        => "List of regular expressions to match banned e-mail addresses (one pattern per line, no separating commas, all expressions are case-insensitive)",
   'dont_allow_ch_email'            => "Don't allow to change users email",
   'dont_allow_ch_handle'           => "Don't allow to change users handle",
   'email_domain_not_allowed'       => "This domain is not allowed",
