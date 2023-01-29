@@ -39,4 +39,6 @@ return array(
   'username_not_allowed'           => "This username is not allowed",
   'not_allowed_to_change_email'    => 'You are not allowed to change your email',
   'not_allowed_to_change_username' => 'You are not allowed to change your username',
+  'uribl'                          => 'URI Blacklists',
+  'uribl_note'                     => 'Validate e-mail domain against these URI blacklists (eg black.uribl.com, one per line)',
 );

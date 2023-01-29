@@ -40,6 +40,7 @@ class qas_registration_blocker {
       qa_opt(qas_ubl_opt::WHITELIST_MODE, (int) qa_post_text(qas_ubl_opt::WHITELIST_MODE));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES, qa_post_text(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_REGEX, qa_post_text(qas_ubl_opt::BANNED_EMAIL_REGEX));
+      qa_opt(qas_ubl_opt::URIBL, qa_post_text(qas_ubl_opt::URIBL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE));
       $saved = true;
@@ -51,6 +52,7 @@ class qas_registration_blocker {
       qas_ubl_opt::WHITELIST_MODE              => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_ADDRESSES      => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_REGEX          => qas_ubl_opt::PLUGIN_ACTIVE,
+      qas_ubl_opt::URIBL                       => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE => qas_ubl_opt::PLUGIN_ACTIVE,
     ));
@@ -62,6 +64,7 @@ class qas_registration_blocker {
       $this->get_whitelist_mode(),
       $this->get_banned_email_address_field(),
       $this->get_banned_email_regex_field(),
+      $this->get_uribl_field(),
       $this->get_dont_allow_email_field_change(),
       $this->get_dont_allow_handle_field_change()
     );
@@ -87,6 +90,8 @@ class qas_registration_blocker {
     $topdomains     = Array();
     $subdomains     = Array();
 
+    $uribl          = explode("\n", qa_opt(qas_ubl_opt::URIBL));
+
     foreach ($all_domains as $domain) {
       if (substr($domain, 0, 1) === '.') {
         $subdomains[] = $domain;
@@ -106,6 +111,11 @@ class qas_registration_blocker {
         return $this->translate('email_domain_not_allowed');
       }
     } else {
+      foreach ($uribl as $bl) {
+        if (preg_match('/^127\.0\.0\.[0-9]+$/', gethostbyname("${email_domain}.${bl}"))) {
+          return $this->translate('email_domain_not_allowed');
+        }
+      }
       if (in_array($email_domain, $topdomains)) {
         return $this->translate('email_domain_not_allowed');
       }
@@ -245,6 +255,18 @@ class qas_registration_blocker {
       'value' => qa_opt(qas_ubl_opt::BANNED_EMAIL_REGEX),
       'type'  => 'textarea',
       'rows'  => 10,
+    ));
+  }
+
+  private function get_uribl_field() {
+    return array(array(
+      'id'    => qas_ubl_opt::URIBL,
+      'label' => $this->translate('uribl'),
+      'note'  => $this->translate('uribl_note'),
+      'tags'  => 'name="' . qas_ubl_opt::URIBL . '"',
+      'value' => qa_opt(qas_ubl_opt::URIBL),
+      'type'  => 'textarea',
+      'rows'  => 5,
     ));
   }
 
