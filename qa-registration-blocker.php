@@ -90,7 +90,7 @@ class qas_registration_blocker {
     $topdomains     = Array();
     $subdomains     = Array();
 
-    $uribl          = explode("\n", qa_opt(qas_ubl_opt::URIBL));
+    $uribl          = array_filter(explode("\n", qa_opt(qas_ubl_opt::URIBL)), function($val) {return !is_null($val) and $val != '';});
 
     foreach ($all_domains as $domain) {
       if (substr($domain, 0, 1) === '.') {
