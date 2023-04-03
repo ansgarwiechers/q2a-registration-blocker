@@ -41,6 +41,7 @@ class qas_registration_blocker {
       qa_opt(qas_ubl_opt::BANNED_EMAIL_ADDRESSES, qa_post_text(qas_ubl_opt::BANNED_EMAIL_ADDRESSES));
       qa_opt(qas_ubl_opt::BANNED_EMAIL_REGEX, qa_post_text(qas_ubl_opt::BANNED_EMAIL_REGEX));
       qa_opt(qas_ubl_opt::URIBL, qa_post_text(qas_ubl_opt::URIBL));
+      qa_opt(qas_ubl_opt::IPBL, qa_post_text(qas_ubl_opt::IPBL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL));
       qa_opt(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE, (int) qa_post_text(qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE));
       $saved = true;
@@ -53,6 +54,7 @@ class qas_registration_blocker {
       qas_ubl_opt::BANNED_EMAIL_ADDRESSES      => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::BANNED_EMAIL_REGEX          => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::URIBL                       => qas_ubl_opt::PLUGIN_ACTIVE,
+      qas_ubl_opt::IPBL                        => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_EMAIL  => qas_ubl_opt::PLUGIN_ACTIVE,
       qas_ubl_opt::DONT_ALLOW_TO_CHANGE_HANDLE => qas_ubl_opt::PLUGIN_ACTIVE,
     ));
@@ -65,6 +67,7 @@ class qas_registration_blocker {
       $this->get_banned_email_address_field(),
       $this->get_banned_email_regex_field(),
       $this->get_uribl_field(),
+      $this->get_ipbl_field(),
       $this->get_dont_allow_email_field_change(),
       $this->get_dont_allow_handle_field_change()
     );
@@ -265,6 +268,18 @@ class qas_registration_blocker {
       'note'  => $this->translate('uribl_note'),
       'tags'  => 'name="' . qas_ubl_opt::URIBL . '"',
       'value' => qa_opt(qas_ubl_opt::URIBL),
+      'type'  => 'textarea',
+      'rows'  => 5,
+    ));
+  }
+
+  private function get_ipbl_field() {
+    return array(array(
+      'id'    => qas_ubl_opt::IPBL,
+      'label' => $this->translate('ipbl'),
+      'note'  => $this->translate('ipbl_note'),
+      'tags'  => 'name="' . qas_ubl_opt::IPBL . '"',
+      'value' => qa_opt(qas_ubl_opt::IPBL),
       'type'  => 'textarea',
       'rows'  => 5,
     ));

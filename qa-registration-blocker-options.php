@@ -34,6 +34,7 @@ class qas_ubl_opt {
   const BANNED_EMAIL_REGEX          = 'qas_ubl_banned_email_regex';
   const WHITELIST_MODE              = 'qas_ubl_whitelist_mode';
   const URIBL                       = 'qas_ubl_uribl';
+  const IPBL                        = 'qas_ubl_ipbl';
   const DONT_ALLOW_TO_CHANGE_EMAIL  = 'qas_ubl_dont_allow_ch_email';
   const DONT_ALLOW_TO_CHANGE_HANDLE = 'qas_ubl_dont_allow_ch_handle';
 }

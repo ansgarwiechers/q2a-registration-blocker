@@ -1,7 +1,7 @@
 {
 	"name": "Registration Blocker",
 	"description": "Blocks registration for provided usernames and email domains.",
-	"version": "1.6.0",
+	"version": "1.8.0",
 	"date": "2020-10-01",
 	"author": "Amiya Sahu",
 	"author": "Ansgar Wiechers",

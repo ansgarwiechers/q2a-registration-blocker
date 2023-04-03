@@ -26,4 +26,5 @@ if (!defined('QAS_U_BLOCKER_PLUGIN_DIR')) {
 require_once QAS_U_BLOCKER_PLUGIN_DIR . '/qa-registration-blocker-options.php';
 
 qa_register_plugin_module('filter', 'qa-registration-blocker.php', 'qas_registration_blocker', 'QA Registration Blocker');
+qa_register_plugin_overrides('ip-check.php');
 qa_register_plugin_phrases('qa-registration-blocker-lang-*.php', 'qas_regb');
